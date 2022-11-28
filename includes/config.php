@@ -2,6 +2,7 @@
 
 $config = array(
     'title' => 'Блог IT_Минималиста',
+    'fb_url' => 'https://www.facebook.com/',
     'db' => array(
         'server' => '127.0.0.1',
         'login' => 'root',
@@ -11,4 +12,5 @@ $config = array(
 );
 
 
+require 'db.php';
 
