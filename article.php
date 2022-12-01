@@ -126,7 +126,7 @@
                                 }
                                 if(empty($errors)) {
                                     // добавить комментарий
-                                    mysqli_query($connection, "INSERT INTO `comment` (`author`, `nickname`, `email`, `text`, `article_id`) VALUE ('".$_POST['name']."', $_POST['nickname'], $_POST['email'], $_POST['text'], $_POST['text'])");
+                                    mysqli_query($connection, "INSERT INTO `comments` (`author`, `nickname`, `email`, `text`, `articles_id`) VALUE ('".$_POST['name']."', '".$_POST['nickname']."', '".$_POST['email']."', '".$_POST['text']."', '".$art['id']."')");
                                     echo '<span style="color: green; front-weight: bold; margin-bottom: 10px; display: block;">комментарий успешно добавлен</span>';
                                 } else {
                                     // выводит ошибку
@@ -149,9 +149,12 @@
                           </div>
                           <div class="form__group">
                             <textarea name="text" class="form__control" placeholder="Текст комментария ...">
-                                <?php echo $_POST['text']?>
+                                <?php 
+                                echo $_POST['text'];
+                                ?>
                             </textarea>
                           </div>
+                          <?php     print_r($_POST['text']);?>
                           <div class="form__group">
                             <input type="submit" class="form__control" name="do_post" value="Добавить комментарий">
                           </div>
