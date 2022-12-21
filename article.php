@@ -24,9 +24,38 @@
     <link rel="stylesheet" type="text/css" href="/media/css/style.css" />
   </head>
   <body>
+    <?php 
+                            
+                            if (isset($_POST['do_post'])) {
+                                $errors = array();
+                               
+
+                                if ($_POST['name'] == '') {
+                                    $errors[] = 'Введите имя!';
+                                };
+                                if ($_POST['nickname'] == '') {
+                                    $errors[] = 'Введите Ваш никнейм!';
+                                }
+                                if ($_POST['email'] == '') {
+                                    $errors[] = 'Введите email!';
+                                }
+                                if ($_POST['text'] == '') {
+                                    $errors[] = 'Введите текст комментария!';
+                                }
+                                if(empty($errors)) {
+                                    // добавить комментарий
+                                    mysqli_query($connection, "INSERT INTO `comments` (`author`, `nickname`, `email`, `text`, `articles_id`) VALUE ('".$_POST['name']."', '".$_POST['nickname']."', '".$_POST['email']."', '".$_POST['text']."', '".$art['id']."')");
+                                    header("Location: http://test.ua" . "$_SERVER[REQUEST_URI]");
+                                    $success_add_com = '<span style="color: green; front-weight: bold; margin-bottom: 10px; display: block;">комментарий успешно добавлен</span>';
+                                } else {
+                                    $fail_add_com = '<span style="color: red; front-weight: bold; margin-bottom: 10px; display: block;">' . $errors['0'] .  '</span>';
+                                }
+                            }
+                        ?>
+   
     <div id="wrapper">
       <?php 
-      include "includes/header.php"      
+      include "includes/header.php";
       ?>
 
       <?php 
@@ -58,6 +87,33 @@
         $art = mysqli_fetch_assoc($article);
         mysqli_query($connection, "UPDATE `articles`  SET `views` = `views` + 1 WHERE `id` = " . (int) $art['id'] );
         ?>
+            <!-- проверка и добавление комментария -->
+            <?php 
+            if (isset($_POST['do_post'])) {
+                $errors = array();
+                if ($_POST['name'] == '') {
+                    $errors[] = 'Введите имя!';
+                };
+                if ($_POST['nickname'] == '') {
+                    $errors[] = 'Введите Ваш никнейм!';
+                }
+                if ($_POST['email'] == '') {
+                    $errors[] = 'Введите email!';
+                }
+                if ($_POST['text'] == '') {
+                    $errors[] = 'Введите текст комментария!';
+                }
+                if(empty($errors)) {
+                    // добавить комментарий
+                    mysqli_query($connection, "INSERT INTO `comments` (`author`, `nickname`, `email`, `text`, `articles_id`) VALUE ('".$_POST['name']."', '".$_POST['nickname']."', '".$_POST['email']."', '".$_POST['text']."', '".$art['id']."')");
+                    header("Location: http://test.ua" . "$_SERVER[REQUEST_URI]");
+                    // $success_add_com = '<span style="color: green; front-weight: bold; margin-bottom: 10px; display: block;">комментарий успешно добавлен</span>';
+                } else {
+                    $fail_add_com = '<span style="color: red; front-weight: bold; margin-bottom: 10px; display: block;">' . $errors['0'] .  '</span>';
+                }
+              }
+            ?>
+
          <div id="content">
               <div class="container">
                 <div class="row">
@@ -73,6 +129,7 @@
                                 </div>
                             </div>
                     </div>
+                    
                     <div class="block">
                              <a href="#comment-add-form">Добавить свой</a>
                              <h3>Комментарии</h3>
@@ -84,6 +141,7 @@
                                   if (mysqli_num_rows($comments) <= 0) {
                                     echo "Нет комментариев";
                                   }
+                             
                                    while ($comment =  mysqli_fetch_assoc( $comments)) 
                                    {
                                  ?> 
@@ -109,30 +167,13 @@
                       <div class="block__content">
                         <form class="form" method="POST" action="/article.php?id=<?php echo $art['id']?>#comment-add-form">
                         <?php 
-                            if (isset($_POST['do_post'])) {
-                                $errors = array();
-
-                                if ($_POST['name'] == '') {
-                                    $errors[] = 'Введите имя!';
-                                };
-                                if ($_POST['nickname'] == '') {
-                                    $errors[] = 'Введите Ваш никнейм!';
-                                }
-                                if ($_POST['email'] == '') {
-                                    $errors[] = 'Введите email!';
-                                }
-                                if ($_POST['text'] == '') {
-                                    $errors[] = 'Введите текст комментария!';
-                                }
-                                if(empty($errors)) {
-                                    // добавить комментарий
-                                    mysqli_query($connection, "INSERT INTO `comments` (`author`, `nickname`, `email`, `text`, `articles_id`) VALUE ('".$_POST['name']."', '".$_POST['nickname']."', '".$_POST['email']."', '".$_POST['text']."', '".$art['id']."')");
-                                    echo '<span style="color: green; front-weight: bold; margin-bottom: 10px; display: block;">комментарий успешно добавлен</span>';
+                            if ($success_add_com) {
+                                echo $success_add_com;
                                 } else {
                                     // выводит ошибку
-                                    echo '<span style="color: red; front-weight: bold; margin-bottom: 10px; display: block;">' . $errors['0'] .  '</span>';
+                                    echo $fail_add_com;
                                 }
-                            }
+                            
                         ?>
                           <div class="form__group">
                             <div class="row">
@@ -154,7 +195,6 @@
                                 ?>
                             </textarea>
                           </div>
-                          <?php     print_r($_POST['text']);?>
                           <div class="form__group">
                             <input type="submit" class="form__control" name="do_post" value="Добавить комментарий">
                           </div>
