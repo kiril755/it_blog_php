@@ -24,34 +24,6 @@
     <link rel="stylesheet" type="text/css" href="/media/css/style.css" />
   </head>
   <body>
-    <?php 
-                            
-                            if (isset($_POST['do_post'])) {
-                                $errors = array();
-                               
-
-                                if ($_POST['name'] == '') {
-                                    $errors[] = 'Введите имя!';
-                                };
-                                if ($_POST['nickname'] == '') {
-                                    $errors[] = 'Введите Ваш никнейм!';
-                                }
-                                if ($_POST['email'] == '') {
-                                    $errors[] = 'Введите email!';
-                                }
-                                if ($_POST['text'] == '') {
-                                    $errors[] = 'Введите текст комментария!';
-                                }
-                                if(empty($errors)) {
-                                    // добавить комментарий
-                                    mysqli_query($connection, "INSERT INTO `comments` (`author`, `nickname`, `email`, `text`, `articles_id`) VALUE ('".$_POST['name']."', '".$_POST['nickname']."', '".$_POST['email']."', '".$_POST['text']."', '".$art['id']."')");
-                                    header("Location: http://test.ua" . "$_SERVER[REQUEST_URI]");
-                                    $success_add_com = '<span style="color: green; front-weight: bold; margin-bottom: 10px; display: block;">комментарий успешно добавлен</span>';
-                                } else {
-                                    $fail_add_com = '<span style="color: red; front-weight: bold; margin-bottom: 10px; display: block;">' . $errors['0'] .  '</span>';
-                                }
-                            }
-                        ?>
    
     <div id="wrapper">
       <?php 
